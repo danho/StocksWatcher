@@ -3,11 +3,32 @@
 
     var mongodb = require('mongodb');
     var http = require('http');
+    var express = require('express');
+    var path = require('path');
+    var io = require('socket.io');
+    var app = express();
+    var server = http.createServer(app);
+    io = io.listen(server);
+    server.listen(8080);
+
+    var socket;
+
+    app.use('/public', express.static(path.join(__dirname, '/../public')));
+
+    app.get('/', function (req, res) {
+        res.sendFile(path.join(__dirname, '/../client/hello.html'));
+    });
+
     var mongoClient = mongodb.MongoClient;
     var url = 'mongodb://localhost:27017/stocks';
 
     var checkTriggers = require("./checkTriggers");
-    getWatches(getRealTimeQuotes);
+
+    io.sockets.on('connection', function (_socket) {
+        socket = _socket;
+        console.log('socket connected');
+        getWatches(getRealTimeQuotes);
+    });
 
     function getRealTimeQuotes(watches, callback) {
         var symbols = '';
@@ -28,7 +49,7 @@
                     });
                     response.on('end', function () {
                         var results = JSON.parse(body);
-                        callback(results.query.results.quote, watches);
+                        callback(results.query.results.quote, watches, socket);
                     });
                 });
             },

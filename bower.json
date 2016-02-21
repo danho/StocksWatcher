@@ -1,0 +1,24 @@
+{
+  "name": "stockswatcher",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Dan"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/danho/StocksWatcher",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io-client": "~1.4.5"
+  }
+}
